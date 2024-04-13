@@ -11,8 +11,8 @@
   "author": "TheDoctor",
   "license": "MIT",
   "devDependencies": {
-    "electron": "13.0.1",
-    "electron-builder": "^22.13.1"
+    "electron": "29.3.0",
+    "electron-builder": "^24.13.3"
   }
 }
 
