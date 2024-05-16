@@ -1,0 +1,7 @@
+requests
+pyperclip
+base64
+platform
+subprocess
+flet
+os
