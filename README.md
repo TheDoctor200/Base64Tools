@@ -1,7 +1,7 @@
 # Base64Tools
 ## Overview
 
-**Base64Tools** is a powerful and easy-to-use tool designed to be [fancy]. It is designed to [encode and decode texts in Asci and UTF-8].
+**Base64Tools** is a powerful and easy-to-use tool designed to be fancy. It is designed to encode and decode texts in Asci and UTF-8.
 
 ## Features
 -Auto App Update
