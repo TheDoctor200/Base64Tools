@@ -15,7 +15,7 @@ https://github.com/TheDoctor200/Base64Tools/releases/latest
 
 ### Requirenment Installation:
 ```bash
-pip install -r requirenments.txt
+pip install -r requirements.txt
 ```
 ### Run the app:
 ```bash
