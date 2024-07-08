@@ -7,17 +7,40 @@ import pyperclip
 import requests
 
 def main(page: ft.Page):
-    page.window_icon = ft.Icon("B64_icon.ico")
+    # Setting window icon
+    icon_path = os.path.join(os.path.dirname(__file__), "assets", "B64_icon.ico")
+    page.window_icon = icon_path
+
     page.title = "Base64 Toolbox"
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.padding = 20
+    page.spacing = 20
+    page.bgcolor = ft.colors.BLUE_GREY_900
 
-    txt_input = ft.TextField(label="Input", width=400)
-    txt_output = ft.TextField(label="Output", width=400, disabled=True, expand=True)
+    txt_input = ft.TextField(
+        label="Input", 
+        width=400, 
+        multiline=True, 
+        border_color=ft.colors.BLUE_ACCENT,
+        text_style=ft.TextStyle(color=ft.colors.WHITE)  # Adjust text color
+    )
+    
+    txt_output = ft.TextField(
+        label="Output", 
+        width=400, 
+        disabled=True, 
+        expand=True, 
+        multiline=True, 
+        border_color=ft.colors.GREEN_ACCENT,
+        text_style=ft.TextStyle(color=ft.colors.WHITE)  # Adjust text color
+    )
+    
     encoding_type = ft.RadioGroup(
-        content=ft.Column(
+        content=ft.Row(
             [
-                ft.Radio(value="utf-8", label="UTF-8"),
-                ft.Radio(value="ascii", label="ASCII"),
+                ft.Radio(value="utf-8", label="UTF-8", fill_color=ft.colors.BLUE_ACCENT),
+                ft.Radio(value="ascii", label="ASCII", fill_color=ft.colors.BLUE_ACCENT),
             ],
             alignment=ft.MainAxisAlignment.CENTER,
         ),
@@ -25,23 +48,13 @@ def main(page: ft.Page):
 
     def process_text(input_text: str, encoding: str, is_encrypt: bool) -> str:
         try:
-            if encoding == "ascii":
-                if is_encrypt:
-                    encoded_text = input_text.encode("ascii")
-                    encrypted_text = base64.b64encode(encoded_text).decode("ascii")
-                else:
-                    decoded_text = base64.b64decode(input_text.encode("ascii")).decode("ascii")
-                    return decoded_text
+            if is_encrypt:
+                encoded_text = input_text.encode(encoding)
+                encrypted_text = base64.b64encode(encoded_text).decode("ascii")
+                return encrypted_text
             else:
-                if is_encrypt:
-                    encoded_text = input_text.encode(encoding)
-                    encrypted_text = base64.b64encode(encoded_text).decode("ascii")
-                else:
-                    decoded_text = base64.b64decode(input_text.encode(encoding)).decode(encoding)
-                    return decoded_text
-            return encrypted_text if is_encrypt else decoded_text
-        except ValueError as e:
-            return f"Error: {e}"
+                decoded_text = base64.b64decode(input_text).decode(encoding)
+                return decoded_text
         except Exception as ex:
             return f"Error: {ex}"
 
@@ -67,7 +80,7 @@ def main(page: ft.Page):
 
     def copy_click(e):
         pyperclip.copy(txt_output.value)
-        txt_output.value = ""
+        txt_output.value = "Copied to clipboard!"
         page.update()
 
     def is_internet_available():
@@ -93,14 +106,14 @@ def main(page: ft.Page):
 
             dialog = ft.AlertDialog(
                 modal=True,
-               title=ft.Row(
-            [
-                ft.Icon(name=ft.icons.WIFI_OFF, color=ft.colors.RED_500),
-                ft.Text("No Internet Connection"),
-            ],
-            spacing=8,
-        ),
-                content=ft.Text("Please check your internet connection and try again."),
+                title=ft.Row(
+                    [
+                        ft.Icon(name=ft.icons.WIFI_OFF, color=ft.colors.RED_500),
+                        ft.Text("No Internet Connection", weight=ft.FontWeight.BOLD, color=ft.colors.WHITE),
+                    ],
+                    spacing=8,
+                ),
+                content=ft.Text("Please check your internet connection and try again.", color=ft.colors.WHITE),
                 actions=[
                     ft.ElevatedButton("OK", on_click=close_dialog),
                 ],
@@ -110,32 +123,46 @@ def main(page: ft.Page):
             page.update()
 
     page.add(
-        ft.Column(
-            [
-                ft.Text("Base 64 Toolbox", size=32, weight=ft.FontWeight.BOLD),
-                ft.Row(
-                    [
-                        ft.Text("Encoding:"),
-                        encoding_type,
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                ),
-                ft.Row([ft.Text("Input:"), txt_input]),
-                ft.Row([ft.ElevatedButton("Encrypt", on_click=encrypt_click)]),
-                ft.Row([ft.Text("Output:"), txt_output]),
-                ft.Row([ft.ElevatedButton("Decrypt", on_click=decrypt_click)]),
-                ft.Row([ft.ElevatedButton("Copy", on_click=copy_click)]),
-                ft.Row(
-                    [
-                        ft.Text("Created by TheDoctor", size=12, color=ft.colors.WHITE),
-                        ft.Icon(name=ft.icons.ROCKET_LAUNCH_OUTLINED, color=ft.colors.BLUE_200),
-                        ft.ElevatedButton("Check for App Update", on_click=update_click)
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                ),
-            ],
-            alignment=ft.MainAxisAlignment.CENTER,
+        ft.Container(
+            content=ft.Column(
+                [
+                    ft.Row(
+                        [
+                            ft.Icon(name=icon_path, size=32, color=ft.colors.WHITE),
+                            ft.Text("Base64 Toolbox", size=32, weight=ft.FontWeight.BOLD, color=ft.colors.WHITE),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
+                    ft.Divider(color=ft.colors.WHITE),
+                    ft.Row(
+                        [
+                            ft.Text("Encoding:", color=ft.colors.WHITE),
+                            encoding_type,
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
+                    ft.Row([txt_input]),
+                    ft.Row([ft.ElevatedButton("Encrypt", on_click=encrypt_click, color=ft.colors.GREEN)]),
+                    ft.Row([txt_output]),
+                    ft.Row([ft.ElevatedButton("Decrypt", on_click=decrypt_click, color=ft.colors.RED)]),
+                    ft.Row([ft.ElevatedButton("Copy", on_click=copy_click, color=ft.colors.BLUE)]),
+                    ft.Row(
+                        [
+                            ft.Text("Created by TheDoctor", size=12, color=ft.colors.WHITE),
+                            ft.Icon(name=ft.icons.ROCKET_LAUNCH_OUTLINED, color=ft.colors.CYAN_200),
+                            ft.ElevatedButton("Check for App Update", on_click=update_click, color=ft.colors.ORANGE)
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
+            padding=20,
+            bgcolor=ft.colors.BLUE_GREY_800,
+            border_radius=10,
         )
     )
 
 ft.app(target=main)
+
+
