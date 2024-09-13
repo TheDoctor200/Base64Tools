@@ -1,3 +1,5 @@
+## Imports
+
 import flet as ft
 import os
 import subprocess
@@ -48,6 +50,8 @@ def main(page: ft.Page):
             alignment=ft.MainAxisAlignment.CENTER,
         ),
     )
+
+## Definitions of the properties 
 
     def process_text(input_text: str, encoding: str, is_encrypt: bool) -> str:
         try:
@@ -125,6 +129,8 @@ def main(page: ft.Page):
             dialog.open = True
             page.update()
 
+## New Page add Buttons to decrypt, and so on.. 
+
     page.add(
         ft.Container(
             content=ft.Column(
@@ -166,6 +172,7 @@ def main(page: ft.Page):
         )
     )
 
+## End Code 
 ft.app(target=main)
 
 
