@@ -11,6 +11,9 @@ def main(page: ft.Page):
     icon_path = os.path.join(os.path.dirname(__file__), "assets", "B64_icon.ico")
     page.window_icon = icon_path
 
+    # Enforce dark theme
+    page.theme_mode = ft.ThemeMode.DARK
+    
     page.title = "Base64 Toolbox"
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -164,5 +167,6 @@ def main(page: ft.Page):
     )
 
 ft.app(target=main)
+
 
 
