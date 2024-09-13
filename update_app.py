@@ -106,11 +106,6 @@ def main():
     sys.exit()
 
 if __name__ == "__main__":
-    # Show console window for debugging (remove/comment out later for production)
-    # SW_HIDE = 0
-    # GetConsoleWindow = ctypes.windll.kernel32.GetConsoleWindow
-    # ShowWindow = ctypes.windll.user32.ShowWindow
-    # ShowWindow(GetConsoleWindow(), SW_HIDE)
-
+    
     main()
 
