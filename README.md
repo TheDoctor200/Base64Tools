@@ -13,6 +13,9 @@ Auto App Update, a nice modern design, encryption / decryption of massages
 >## Installation
 >**Installer** / **standalone Versions** can be found here: 
 >https://github.com/TheDoctor200/Base64Tools/releases/latest
+
+<br>
+
 >**Web Version:** https://base64tools.onrender.com
 >(currently work in progress)
 
