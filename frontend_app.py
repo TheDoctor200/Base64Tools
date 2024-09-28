@@ -36,14 +36,13 @@ def main(page: ft.Page):
         expand=True  # Make the input expand based on available space
     )
 
-    # Output display (using ft.Text instead of ft.TextField)
+    # Output display with increased size
     txt_output = ft.Text(
-        value="Output will appear here...",
+        value="Output will appear here...",  # Initial placeholder text
         selectable=True,  # Allows text to be copied
-        width=page.window_width * 0.8,  # Responsive width based on window size
         color=ft.colors.ON_SURFACE_VARIANT,
-        max_lines=None,  # Unlimited lines
-        overflow="visible"  # Output can grow based on content
+        size=16,  # Increase text size for better visibility
+        weight=ft.FontWeight.NORMAL,  # Regular weight for output text
     )
 
     # Encoding type selection
@@ -66,31 +65,40 @@ def main(page: ft.Page):
                 encrypted_text = base64.b64encode(encoded_text).decode("ascii")
                 return encrypted_text
             else:
-                decoded_text = base64.b64decode(input_text).decode(encoding)
+                decoded_bytes = base64.b64decode(input_text)
+                decoded_text = decoded_bytes.decode(encoding)
                 return decoded_text
         except Exception as ex:
             return f"Error: {ex}"
 
-    # Encryption and decryption functions
+    # Encryption function
     def encrypt_click(e):
-        input_text = txt_input.value
+        input_text = txt_input.value.strip()
         if not input_text:
             show_toast("Please enter input text", color=ft.colors.RED)
             return
+        
         encoding = encoding_type.value
-        txt_output.value = process_text(input_text, encoding, True)
+        result = process_text(input_text, encoding, True)
+        update_output(result)
         show_toast("Text encrypted successfully!")
-        page.update()
 
+    # Decryption function
     def decrypt_click(e):
-        input_text = txt_input.value
+        input_text = txt_input.value.strip()
         if not input_text:
             show_toast("Please enter input text", color=ft.colors.RED)
             return
+        
         encoding = encoding_type.value
-        txt_output.value = process_text(input_text, encoding, False)
+        result = process_text(input_text, encoding, False)
+        update_output(result)
         show_toast("Text decrypted successfully!")
-        page.update()
+
+    # Function to update the output display
+    def update_output(result: str):
+        txt_output.value = result if result else "Output will appear here..."
+        page.update()  # Ensure the page reflects the changes
 
     # Copy function
     def copy_click(e):
@@ -110,33 +118,14 @@ def main(page: ft.Page):
         if is_internet_available():
             try:
                 if platform.system() == 'Windows':
-                    os.startfile('update_app.py')
+                    os.startfile('update_app.py')  # Opens the update script for Windows
                 else:
-                    subprocess.call(['python3', 'update_app.py'])
+                    subprocess.call(['python3', 'update_app.py'])  # Opens the update script for Linux/Mac
             except Exception as e:
                 print(f"Error opening update_app.py: {e}")
+                show_toast("Error opening update script", color=ft.colors.RED)
         else:
-            def close_dialog(e):
-                dialog.open = False
-                page.update()
-
-            dialog = ft.AlertDialog(
-                modal=True,
-                title=ft.Row(
-                    [
-                        ft.Icon(name=ft.icons.WIFI_OFF, color=ft.colors.RED_500),
-                        ft.Text("No Internet Connection", weight=ft.FontWeight.BOLD, color=ft.colors.WHITE),
-                    ],
-                    spacing=8,
-                ),
-                content=ft.Text("Please check your internet connection and try again.", color=ft.colors.WHITE),
-                actions=[
-                    ft.ElevatedButton("OK", on_click=close_dialog),
-                ],
-            )
-            page.dialog = dialog
-            dialog.open = True
-            page.update()
+            show_toast("No internet connection available to check for updates.", color=ft.colors.RED)
 
     # Add components to the page
     page.add(
@@ -160,13 +149,13 @@ def main(page: ft.Page):
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
                     ),
-                    # Text input field (with full width expansion)
+                    # Text input field
                     ft.Container(
                         txt_input,
                         width=page.window_width * 0.8,  # Responsive width based on window size
-                        margin=ft.Margin(0, 10, 0, 10),  # Corrected margin to use four values
+                        margin=ft.Margin(0, 10, 0, 10),  # Margin for input field
                     ),
-                    # Encrypt and decrypt buttons with container for border radius
+                    # Encrypt and decrypt buttons
                     ft.Row(
                         [
                             ft.Container(
@@ -191,16 +180,21 @@ def main(page: ft.Page):
                         alignment=ft.MainAxisAlignment.CENTER,
                         spacing=10
                     ),
-                    # Output display field
+                    # Output display field with increased height
                     ft.Container(
-                        txt_output,
+                        content=ft.Column(
+                            [
+                                txt_output
+                            ]
+                        ),
                         width=page.window_width * 0.8,  # Responsive width based on window size
-                        padding=ft.Padding(10, 10, 10, 10),  # Corrected padding with all sides specified
+                        height=150,  # Increase height for the output field
+                        padding=ft.Padding(10, 10, 10, 10),  # Padding for output field
                         bgcolor=ft.colors.SURFACE_VARIANT,  # Background color for output
                         border_radius=8,
                         alignment=ft.alignment.center_left,
                     ),
-                    # Copy button with container for border radius
+                    # Copy button with adjusted size
                     ft.Container(
                         content=ft.ElevatedButton(
                             "Copy to Clipboard", 
@@ -208,9 +202,10 @@ def main(page: ft.Page):
                             color=ft.colors.CYAN_400,
                         ),
                         border_radius=8,
-                        expand=True,  # Button expands based on available space
+                        expand=False,  # Do not expand to fill space
+                        width=150,  # Fixed width for the button
                     ),
-                    # Footer
+                    # Footer with update button
                     ft.Row(
                         [
                             ft.Text("Created by TheDoctor", size=12, color=ft.colors.WHITE),
@@ -222,8 +217,9 @@ def main(page: ft.Page):
                                     color=ft.colors.ORANGE,
                                 ),
                                 border_radius=8,
-                                expand=True,  # Button expands based on available space
-                            )
+                                expand=True,  # Button stretches to fill the remaining space
+                                width=200,  # Specify a fixed width for the button
+                            ),
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
                     ),
@@ -231,7 +227,7 @@ def main(page: ft.Page):
                 alignment=ft.MainAxisAlignment.CENTER,
                 expand=True  # Ensure column expands vertically
             ),
-            padding=ft.Padding(20, 20, 20, 20),  # Corrected padding with four values
+            padding=ft.Padding(20, 20, 20, 20),  # Padding for the main container
             bgcolor=ft.colors.SURFACE,
             border_radius=10,
             expand=True  # Ensure container expands with screen size
@@ -240,6 +236,7 @@ def main(page: ft.Page):
 
 # Start the app
 ft.app(target=main)
+
 
 
 
