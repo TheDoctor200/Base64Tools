@@ -1,5 +1,3 @@
-## Imports
-
 import flet as ft
 import os
 import subprocess
@@ -13,46 +11,54 @@ def main(page: ft.Page):
     icon_path = os.path.join(os.path.dirname(__file__), "assets", "B64_icon.ico")
     page.window_icon = icon_path
 
-    # Enforce dark theme
+    # Enforce dark theme with a modern look
     page.theme_mode = ft.ThemeMode.DARK
-    
     page.title = "Base64 Toolbox"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.padding = 20
-    page.spacing = 20
-    page.bgcolor = ft.colors.BLUE_GREY_900
+    page.bgcolor = ft.colors.SURFACE_VARIANT
 
+    # Helper function for status notifications
+    def show_toast(message: str, color: str = ft.colors.GREEN):
+        page.snack_bar = ft.SnackBar(
+            content=ft.Text(message, color=ft.colors.WHITE),
+            bgcolor=color,
+            duration=2000,
+        )
+        page.snack_bar.open = True
+        page.update()
+
+    # Text Input
     txt_input = ft.TextField(
-        label="Input", 
-        width=400, 
-        multiline=True, 
-        border_color=ft.colors.BLUE_ACCENT,
-        text_style=ft.TextStyle(color=ft.colors.WHITE)  # Adjust text color
+        label="Input Text",
+        multiline=True,
+        border_radius=8,
+        border_color=ft.colors.CYAN_500,
+        text_style=ft.TextStyle(color=ft.colors.ON_SURFACE_VARIANT),
+        expand=True  # Make the input expand based on available space
     )
-    
-    txt_output = ft.TextField(
-        label="Output", 
-        width=400, 
-        disabled=True, 
-        expand=True, 
-        multiline=True, 
-        border_color=ft.colors.GREEN_ACCENT,
-        text_style=ft.TextStyle(color=ft.colors.WHITE)  # Adjust text color
+
+    # Output display (using ft.Text instead of ft.TextField)
+    txt_output = ft.Text(
+        value="Output will appear here...",
+        selectable=True,  # Allows text to be copied
+        width=page.window_width * 0.8,  # Responsive width based on window size
+        color=ft.colors.ON_SURFACE_VARIANT,
+        max_lines=None,  # Unlimited lines
+        overflow="visible"  # Output can grow based on content
     )
-    
+
+    # Encoding type selection
     encoding_type = ft.RadioGroup(
         content=ft.Row(
             [
-                ft.Radio(value="utf-8", label="UTF-8", fill_color=ft.colors.BLUE_ACCENT),
-                ft.Radio(value="ascii", label="ASCII", fill_color=ft.colors.BLUE_ACCENT),
+                ft.Radio(value="utf-8", label="UTF-8", fill_color=ft.colors.CYAN_500),
+                ft.Radio(value="ascii", label="ASCII", fill_color=ft.colors.CYAN_500),
             ],
             alignment=ft.MainAxisAlignment.CENTER,
         ),
+        value="utf-8",
     )
 
-## Definitions of the properties 
-
+    # Function to process Base64
     def process_text(input_text: str, encoding: str, is_encrypt: bool) -> str:
         try:
             if is_encrypt:
@@ -65,31 +71,33 @@ def main(page: ft.Page):
         except Exception as ex:
             return f"Error: {ex}"
 
+    # Encryption and decryption functions
     def encrypt_click(e):
         input_text = txt_input.value
         if not input_text:
-            txt_output.value = "Please enter input text"
-            page.update()
+            show_toast("Please enter input text", color=ft.colors.RED)
             return
         encoding = encoding_type.value
         txt_output.value = process_text(input_text, encoding, True)
+        show_toast("Text encrypted successfully!")
         page.update()
 
     def decrypt_click(e):
         input_text = txt_input.value
         if not input_text:
-            txt_output.value = "Please enter input text"
-            page.update()
+            show_toast("Please enter input text", color=ft.colors.RED)
             return
         encoding = encoding_type.value
         txt_output.value = process_text(input_text, encoding, False)
+        show_toast("Text decrypted successfully!")
         page.update()
 
+    # Copy function
     def copy_click(e):
         pyperclip.copy(txt_output.value)
-        txt_output.value = "Copied to clipboard!"
-        page.update()
+        show_toast("Output copied to clipboard!")
 
+    # Function to check internet availability
     def is_internet_available():
         try:
             requests.head("http://www.google.com/", timeout=1)
@@ -97,6 +105,7 @@ def main(page: ft.Page):
         except requests.ConnectionError:
             return False
 
+    # Update function
     def update_click(e):
         if is_internet_available():
             try:
@@ -129,12 +138,12 @@ def main(page: ft.Page):
             dialog.open = True
             page.update()
 
-## New Page add Buttons to decrypt, and so on.. 
-
+    # Add components to the page
     page.add(
         ft.Container(
             content=ft.Column(
                 [
+                    # Title and logo
                     ft.Row(
                         [
                             ft.Icon(name=icon_path, size=32, color=ft.colors.WHITE),
@@ -143,6 +152,7 @@ def main(page: ft.Page):
                         alignment=ft.MainAxisAlignment.CENTER,
                     ),
                     ft.Divider(color=ft.colors.WHITE),
+                    # Encoding selection
                     ft.Row(
                         [
                             ft.Text("Encoding:", color=ft.colors.WHITE),
@@ -150,30 +160,97 @@ def main(page: ft.Page):
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
                     ),
-                    ft.Row([txt_input]),
-                    ft.Row([ft.ElevatedButton("Encrypt", on_click=encrypt_click, color=ft.colors.GREEN)]),
-                    ft.Row([txt_output]),
-                    ft.Row([ft.ElevatedButton("Decrypt", on_click=decrypt_click, color=ft.colors.RED)]),
-                    ft.Row([ft.ElevatedButton("Copy", on_click=copy_click, color=ft.colors.BLUE)]),
+                    # Text input field (with full width expansion)
+                    ft.Container(
+                        txt_input,
+                        width=page.window_width * 0.8,  # Responsive width based on window size
+                        margin=ft.Margin(0, 10, 0, 10),  # Corrected margin to use four values
+                    ),
+                    # Encrypt and decrypt buttons with container for border radius
+                    ft.Row(
+                        [
+                            ft.Container(
+                                content=ft.ElevatedButton(
+                                    "Encrypt", 
+                                    on_click=encrypt_click, 
+                                    color=ft.colors.LIGHT_GREEN_500,
+                                ),
+                                border_radius=8,
+                                expand=True,  # Button expands based on available space
+                            ),
+                            ft.Container(
+                                content=ft.ElevatedButton(
+                                    "Decrypt", 
+                                    on_click=decrypt_click, 
+                                    color=ft.colors.RED_500,
+                                ),
+                                border_radius=8,
+                                expand=True,  # Button expands based on available space
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=10
+                    ),
+                    # Output display field
+                    ft.Container(
+                        txt_output,
+                        width=page.window_width * 0.8,  # Responsive width based on window size
+                        padding=ft.Padding(10, 10, 10, 10),  # Corrected padding with all sides specified
+                        bgcolor=ft.colors.SURFACE_VARIANT,  # Background color for output
+                        border_radius=8,
+                        alignment=ft.alignment.center_left,
+                    ),
+                    # Copy button with container for border radius
+                    ft.Container(
+                        content=ft.ElevatedButton(
+                            "Copy to Clipboard", 
+                            on_click=copy_click, 
+                            color=ft.colors.CYAN_400,
+                        ),
+                        border_radius=8,
+                        expand=True,  # Button expands based on available space
+                    ),
+                    # Footer
                     ft.Row(
                         [
                             ft.Text("Created by TheDoctor", size=12, color=ft.colors.WHITE),
                             ft.Icon(name=ft.icons.ROCKET_LAUNCH_OUTLINED, color=ft.colors.CYAN_200),
-                            ft.ElevatedButton("Check for App Update", on_click=update_click, color=ft.colors.ORANGE)
+                            ft.Container(
+                                content=ft.ElevatedButton(
+                                    "Check for App Update", 
+                                    on_click=update_click, 
+                                    color=ft.colors.ORANGE,
+                                ),
+                                border_radius=8,
+                                expand=True,  # Button expands based on available space
+                            )
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
+                expand=True  # Ensure column expands vertically
             ),
-            padding=20,
-            bgcolor=ft.colors.BLUE_GREY_800,
+            padding=ft.Padding(20, 20, 20, 20),  # Corrected padding with four values
+            bgcolor=ft.colors.SURFACE,
             border_radius=10,
+            expand=True  # Ensure container expands with screen size
         )
     )
 
-## End Code 
+# Start the app
 ft.app(target=main)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
