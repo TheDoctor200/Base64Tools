@@ -6,8 +6,9 @@
 ## Features
 Auto App Update, a nice modern design, encryption / decryption of massages
 
+
+## Installation
 > [!NOTE]
->## Installation
 >**Installer** / **standalone Versions** can be found here: 
 >https://github.com/TheDoctor200/Base64Tools/releases/latest
 
