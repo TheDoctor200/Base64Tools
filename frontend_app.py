@@ -57,17 +57,27 @@ def main(page: ft.Page):
         value="utf-8",
     )
 
-    # Function to process Base64
+    # Function to process Base64 and ASCII
     def process_text(input_text: str, encoding: str, is_encrypt: bool) -> str:
         try:
-            if is_encrypt:
-                encoded_text = input_text.encode(encoding)
-                encrypted_text = base64.b64encode(encoded_text).decode("ascii")
-                return encrypted_text
-            else:
-                decoded_bytes = base64.b64decode(input_text)
-                decoded_text = decoded_bytes.decode(encoding)
-                return decoded_text
+            if encoding == "ascii":
+                if is_encrypt:
+                    # Encrypt to ASCII: Convert each character to its ASCII value and join with spaces
+                    encrypted_text = " ".join(str(ord(char)) for char in input_text)
+                    return encrypted_text
+                else:
+                    # Decrypt from ASCII: Split input by spaces and convert back to characters
+                    decoded_text = "".join(chr(int(num)) for num in input_text.split())
+                    return decoded_text
+            else:  # For UTF-8 and other encodings, use Base64
+                if is_encrypt:
+                    encoded_text = input_text.encode(encoding)
+                    encrypted_text = base64.b64encode(encoded_text).decode("ascii")
+                    return encrypted_text
+                else:
+                    decoded_bytes = base64.b64decode(input_text)
+                    decoded_text = decoded_bytes.decode(encoding)
+                    return decoded_text
         except Exception as ex:
             return f"Error: {ex}"
 
@@ -208,7 +218,7 @@ def main(page: ft.Page):
                     # Footer with update button
                     ft.Row(
                         [
-                            ft.Text("Created by TheDoctor", size=12, color=ft.colors.WHITE),
+                            ft.Text("Created by TheDoctor", size=12, color=ft.colors.WHITE, weight=ft.FontWeight.BOLD),
                             ft.Icon(name=ft.icons.ROCKET_LAUNCH_OUTLINED, color=ft.colors.CYAN_200),
                             ft.Container(
                                 content=ft.ElevatedButton(
@@ -236,6 +246,7 @@ def main(page: ft.Page):
 
 # Start the app
 ft.app(target=main)
+
 
 
 
