@@ -1,10 +1,10 @@
-import flet as ft
 import os
 import subprocess
 import platform
 import base64
 import pyperclip
 import requests
+import flet as ft
 
 def main(page: ft.Page):
     # Setting window icon
@@ -62,11 +62,11 @@ def main(page: ft.Page):
         try:
             if encoding == "ascii":
                 if is_encrypt:
-                    # Encrypt to ASCII: Convert each character to its ASCII value and join with spaces
+                    # Encrypt to ASCII: Convert each character to its ASCII
                     encrypted_text = " ".join(str(ord(char)) for char in input_text)
                     return encrypted_text
                 else:
-                    # Decrypt from ASCII: Split input by spaces and convert back to characters
+                    # Decrypt from ASCII
                     decoded_text = "".join(chr(int(num)) for num in input_text.split())
                     return decoded_text
             else:  # For UTF-8 and other encodings, use Base64
@@ -87,7 +87,7 @@ def main(page: ft.Page):
         if not input_text:
             show_toast("Please enter input text", color=ft.colors.RED)
             return
-        
+              
         encoding = encoding_type.value
         result = process_text(input_text, encoding, True)
         update_output(result)
@@ -99,7 +99,7 @@ def main(page: ft.Page):
         if not input_text:
             show_toast("Please enter input text", color=ft.colors.RED)
             return
-        
+              
         encoding = encoding_type.value
         result = process_text(input_text, encoding, False)
         update_output(result)
@@ -162,8 +162,10 @@ def main(page: ft.Page):
                     # Text input field
                     ft.Container(
                         txt_input,
-                        width=page.window_width * 0.8,  # Responsive width based on window size
-                        margin=ft.Margin(0, 10, 0, 10),  # Margin for input field
+                        width=page.window_width * 0.8,  
+                        # Responsive width based on window size
+                        margin=ft.Margin(0, 10, 0, 10),  
+                        # Margin for input field
                     ),
                     # Encrypt and decrypt buttons
                     ft.Row(
@@ -175,7 +177,8 @@ def main(page: ft.Page):
                                     color=ft.colors.LIGHT_GREEN_500,
                                 ),
                                 border_radius=8,
-                                expand=True,  # Button expands based on available space
+                                expand=True,  
+                                # Button expands based on available space
                             ),
                             ft.Container(
                                 content=ft.ElevatedButton(
@@ -184,7 +187,8 @@ def main(page: ft.Page):
                                     color=ft.colors.RED_500,
                                 ),
                                 border_radius=8,
-                                expand=True,  # Button expands based on available space
+                                expand=True,  
+                                # Button expands based on available space
                             ),
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
@@ -197,10 +201,14 @@ def main(page: ft.Page):
                                 txt_output
                             ]
                         ),
-                        width=page.window_width * 0.8,  # Responsive width based on window size
-                        height=150,  # Increase height for the output field
-                        padding=ft.Padding(10, 10, 10, 10),  # Padding for output field
-                        bgcolor=ft.colors.SURFACE_VARIANT,  # Background color for output
+                        width=page.window_width * 0.8,  
+                        # Responsive width based on window size
+                        height=150,  
+                        # Increase height for the output field
+                        padding=ft.Padding(10, 10, 10, 10),  
+                        # Padding for output field
+                        bgcolor=ft.colors.SURFACE_VARIANT,  
+                        # Background color for output
                         border_radius=8,
                         alignment=ft.alignment.center_left,
                     ),
@@ -246,20 +254,3 @@ def main(page: ft.Page):
 
 # Start the app
 ft.app(target=main)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
