@@ -6,7 +6,6 @@ import pyperclip
 import requests
 import flet as ft
 
-
 def main(page: ft.Page):
     # Setting window icon
     icon_path = os.path.join(os.path.dirname(__file__), "assets", "B64_icon.ico")
@@ -41,7 +40,7 @@ def main(page: ft.Page):
     txt_output = ft.Text(
         value="Output will appear here...",
         selectable=True,
-        color=ft.Colors.ON_SURFACE,
+        color=ft.Colors.ON_SURFACE,  # Text color to be visible on dark background
         size=16,
         weight=ft.FontWeight.NORMAL,
     )
@@ -136,6 +135,38 @@ def main(page: ft.Page):
         pyperclip.copy(txt_output.value)
         show_toast("Output copied to clipboard!")
 
+    # Container for the output field
+    output_container = ft.Container(
+        content=ft.Column([txt_output]),
+        width=page.window.width * 0.8,
+        height=150,
+        padding=ft.Padding(10, 10, 10, 10),
+        bgcolor=ft.Colors.SURFACE,  # Background color for the text output
+        border_radius=8,
+        alignment=ft.alignment.center_left,
+    )
+
+    # Update app button (this will open updater.exe)
+    def update_app_click(e):
+        try:
+            # Path to updater.exe (you can customize the path based on where it's located)
+            updater_path = os.path.join(os.path.dirname(__file__), "updater.exe")
+            if os.path.exists(updater_path):
+                subprocess.run([updater_path], check=True)
+            else:
+                show_toast("Updater not found!", color=ft.Colors.RED)
+        except Exception as ex:
+            show_toast(f"Error: {ex}", color=ft.Colors.RED)
+
+    # Info Text ("Made by the Doctor") at the bottom right of the app
+    info_text = ft.Text(
+        value="Made by the Doctor",
+        color=ft.Colors.WHITE,
+        size=12,
+        weight=ft.FontWeight.NORMAL,
+        alignment=ft.alignment.bottom_right,
+    )
+
     # Add components to the page
     page.add(
         ft.Container(
@@ -184,20 +215,31 @@ def main(page: ft.Page):
                         alignment=ft.MainAxisAlignment.CENTER,
                         spacing=10,
                     ),
-                    ft.Container(
-                        content=ft.Column([txt_output]),
-                        width=page.window.width * 0.8,
-                        height=150,
-                        padding=ft.Padding(10, 10, 10, 10),
-                        bgcolor=ft.Colors.ON_SURFACE_VARIANT,  # Adjusted to use a valid color
-                        border_radius=8,
-                        alignment=ft.alignment.center_left,
-                    ),
+                    output_container,  # Adding the output container here
                     ft.Container(
                         content=ft.ElevatedButton("Copy to Clipboard", on_click=copy_click, color=ft.Colors.CYAN_400),
                         border_radius=8,
                         expand=False,
                         width=150,
+                    ),
+                    ft.Row(
+                        [
+                            # Update app button at the bottom left
+                            ft.Container(
+                                content=ft.ElevatedButton("Update App", on_click=update_app_click, color=ft.Colors.AMBER_500),
+                                border_radius=8,
+                                expand=False,
+                                width=150,
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
+                    # Info text at the bottom right
+                    ft.Container(
+                        content=info_text,
+                        alignment=ft.alignment.bottom_right,
+                        width=page.window_width,
+                        padding=ft.Padding(10, 10, 10, 10),
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
@@ -210,9 +252,9 @@ def main(page: ft.Page):
         )
     )
 
-
 # Start the app
 ft.app(target=main)
+
 
 
 
