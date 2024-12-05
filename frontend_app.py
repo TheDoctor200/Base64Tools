@@ -178,7 +178,7 @@ def main(page: ft.Page):
                 [
                     ft.Row(
                         [
-                            ft.Icon(name="info", size=32, color=ft.Colors.WHITE),
+                            ft.Icon(name="ROCKET_LAUNCH_SHARP", size=32, color=ft.Colors.WHITE),
                             ft.Text("Base64 Toolbox", size=32, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
