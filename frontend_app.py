@@ -138,7 +138,7 @@ def main(page: ft.Page):
     # Container for the output field
     output_container = ft.Container(
         content=ft.Column([txt_output]),
-        width=page.window.width * 0.8,
+        width=page.window.width * 0.8,  # Updated line
         height=150,
         padding=ft.Padding(10, 10, 10, 10),
         bgcolor=ft.Colors.SURFACE,  # Background color for the text output
@@ -167,7 +167,7 @@ def main(page: ft.Page):
             weight=ft.FontWeight.BOLD,
         ),
         alignment=ft.alignment.bottom_right,  # Set alignment on Container
-        width=page.window_width,
+        width=page.window.width,  # Updated line
         padding=ft.Padding(10, 10, 10, 10),
     )
 
@@ -252,6 +252,7 @@ def main(page: ft.Page):
 
 # Start the app
 ft.app(target=main)
+
 
 
 
