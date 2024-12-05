@@ -161,10 +161,10 @@ def main(page: ft.Page):
     # Info Text ("Made by the Doctor") at the bottom right of the app
     info_text_container = ft.Container(
         content=ft.Text(
-            value="Made by the Doctor",
+            value="Made by the Doctor ",
             color=ft.Colors.WHITE,
             size=12,
-            weight=ft.FontWeight.NORMAL,
+            weight=ft.FontWeight.BOLD,
         ),
         alignment=ft.alignment.bottom_right,  # Set alignment on Container
         width=page.window_width,
