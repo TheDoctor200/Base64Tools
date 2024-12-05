@@ -159,12 +159,16 @@ def main(page: ft.Page):
             show_toast(f"Error: {ex}", color=ft.Colors.RED)
 
     # Info Text ("Made by the Doctor") at the bottom right of the app
-    info_text = ft.Text(
-        value="Made by the Doctor",
-        color=ft.Colors.WHITE,
-        size=12,
-        weight=ft.FontWeight.NORMAL,
-        alignment=ft.alignment.bottom_right,
+    info_text_container = ft.Container(
+        content=ft.Text(
+            value="Made by the Doctor",
+            color=ft.Colors.WHITE,
+            size=12,
+            weight=ft.FontWeight.NORMAL,
+        ),
+        alignment=ft.alignment.bottom_right,  # Set alignment on Container
+        width=page.window_width,
+        padding=ft.Padding(10, 10, 10, 10),
     )
 
     # Add components to the page
@@ -234,19 +238,13 @@ def main(page: ft.Page):
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
                     ),
-                    # Info text at the bottom right
-                    ft.Container(
-                        content=info_text,
-                        alignment=ft.alignment.bottom_right,
-                        width=page.window_width,
-                        padding=ft.Padding(10, 10, 10, 10),
-                    ),
+                    info_text_container,  # Adding the info text at the bottom right
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
                 expand=True,
             ),
             padding=ft.Padding(20, 20, 20, 20),
-            bgcolor=ft.Colors.SURFACE,  # Corrected to valid color
+            bgcolor=ft.Colors.SURFACE,
             border_radius=10,
             expand=True,
         )
@@ -254,6 +252,8 @@ def main(page: ft.Page):
 
 # Start the app
 ft.app(target=main)
+
+
 
 
 
