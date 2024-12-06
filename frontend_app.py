@@ -251,7 +251,7 @@ def main(page: ft.Page):
     )
 
 # Start the app
-ft.app(target=main)
+ft.app(target=main, view=ft.FLET_APP)
 
 
 
