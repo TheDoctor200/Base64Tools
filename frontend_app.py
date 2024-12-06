@@ -251,7 +251,7 @@ def main(page: ft.Page):
     )
 
 # Start the app
-ft.app(target=main, view=ft.FLET_APP)
+ft.app(target=main, view=ft.FLET_APP, assets_dir="assets")
 
 
 
