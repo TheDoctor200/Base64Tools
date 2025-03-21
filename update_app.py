@@ -5,6 +5,8 @@ import requests
 import json
 import sys
 import os
+import platform
+import subprocess
 
 # Constants
 GITHUB_API_URL = "https://api.github.com/repos/TheDoctor200/Base64Tools/releases/latest"
@@ -13,7 +15,12 @@ CURRENT_VERSION_FILE = "version.txt"  # Path to your app version file
 
 # Utility to display message boxes
 def show_message_box(title, message):
-    ctypes.windll.user32.MessageBoxW(0, message, title, 0x40 | 0x1)  # 0x40 = INFO_ICON, 0x1 = OK_BUTTON
+    system = platform.system()
+    if system == "Windows":
+        ctypes.windll.user32.MessageBoxW(0, message, title, 0x40 | 0x1)  # 0x40 = INFO_ICON, 0x1 = OK_BUTTON
+    elif system == "Darwin":  # macOS and iOS
+        script = f'display dialog "{message}" with title "{title}" buttons {{"OK"}}'
+        subprocess.run(["osascript", "-e", script])
 
 # Function to get current version from the local version file
 def get_current_version():
@@ -106,12 +113,13 @@ def main():
     sys.exit()
 
 if __name__ == "__main__":
-
-    # Hiding the console window
-    SW_HIDE = 0
-    GetConsoleWindow = ctypes.windll.kernel32.GetConsoleWindow
-    ShowWindow = ctypes.windll.user32.ShowWindow
-    ShowWindow(GetConsoleWindow(), SW_HIDE)
+    if platform.system() == "Windows":
+        # Hiding the console window
+        SW_HIDE = 0
+        GetConsoleWindow = ctypes.windll.kernel32.GetConsoleWindow
+        ShowWindow = ctypes.windll.user32.ShowWindow
+        ShowWindow(GetConsoleWindow(), SW_HIDE)
     
     main()
+
 
