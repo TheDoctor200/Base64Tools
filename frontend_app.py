@@ -109,7 +109,7 @@ def main(page: ft.Page):
 
     # Open update link function
     def open_update_link(e):
-        webbrowser.open("https://your-update-link.com")
+        webbrowser.open("https://github.com/TheDoctor200/Base64Tools/releases/latest")
 
     # UI Layout
     page.add(
