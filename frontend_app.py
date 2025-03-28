@@ -78,7 +78,7 @@ def main(page: ft.Page):
             elif method == "base64":
                 return base64.b64encode(input_text.encode("utf-8")).decode("ascii") if is_encrypt else base64.b64decode(input_text).decode("utf-8")
             elif method == "utf-8":
-                return " ".join(str(byte) for byte in input_text.encode("utf-8")) if is_encrypt else bytes(map(int, input_text.split())).decode("utf-8")
+                return input_text.encode("utf-8").hex() if is_encrypt else bytes.fromhex(input_text).decode("utf-8")
             elif method == "caesar":
                 shift = int(shift_input.value) if shift_input.value.isdigit() else 3
                 return "".join(
