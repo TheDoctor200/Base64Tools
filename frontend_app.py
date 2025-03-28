@@ -123,7 +123,7 @@ def main(page: ft.Page):
                         ft.ElevatedButton("Decrypt", on_click=decrypt_click, color=ft.Colors.RED_500),
                     ], alignment=ft.MainAxisAlignment.CENTER),
                     txt_output_container,
-                    ft.ElevatedButton("Copy to Clipboard", on_click=copy_click, color=ft.Colors.CYAN_400),
+                    ft.ElevatedButton("Copy to Clipboard", on_click=copy_click, color=ft.Colors.CYAN_400, icon=ft.icons.CONTENT_COPY, icon_color=ft.Colors.CYAN_300),
                     ft.Row([
                         ft.Container(
                             content=ft.ElevatedButton("Update App", on_click=open_update_link, color=ft.Colors.AMBER_500, icon=ft.icons.UPDATE, icon_color=ft.Colors.YELLOW_900), 
@@ -132,11 +132,18 @@ def main(page: ft.Page):
                         ),
                     ], alignment=ft.MainAxisAlignment.END),
                     ft.Container(
-                        content=ft.Text(
-                            value="Made by TheDoctor",
-                            color=ft.Colors.WHITE,
-                            size=12,
-                            weight=ft.FontWeight.BOLD,
+                        content=ft.Row(
+                            [
+                                ft.Icon(name="FLAG_ROUNDED", size=20, color=ft.Colors.WHITE),
+                                ft.Text(
+                                    value="Made by TheDoctor",
+                                    color=ft.Colors.WHITE,
+                                    size=12,
+                                    weight=ft.FontWeight.BOLD,
+                                ),
+                            ],
+                            alignment=ft.MainAxisAlignment.END,
+                            vertical_alignment=ft.CrossAxisAlignment.CENTER,
                         ),
                         alignment=ft.alignment.bottom_right,
                         padding=ft.Padding(10, 10, 10, 10),
