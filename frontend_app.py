@@ -126,7 +126,7 @@ def main(page: ft.Page):
                     ft.ElevatedButton("Copy to Clipboard", on_click=copy_click, color=ft.Colors.CYAN_400),
                     ft.Row([
                         ft.Container(
-                            content=ft.ElevatedButton("Update App", on_click=open_update_link, color=ft.Colors.AMBER_500),
+                            content=ft.ElevatedButton("Update App", on_click=open_update_link, color=ft.Colors.AMBER_500, icon=ft.icons.UPDATE, icon_color=ft.Colors.YELLOW_900), 
                             alignment=ft.alignment.bottom_right,
                             padding=ft.Padding(10, 10, 10, 10),
                         ),
