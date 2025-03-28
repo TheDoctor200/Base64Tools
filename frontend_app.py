@@ -5,18 +5,14 @@ import flet as ft
 import webbrowser
 
 def main(page: ft.Page):
-    # Setting window icon
     icon_path = os.path.join(os.path.dirname(__file__), "assets", "B64_icon.ico")
     page.window_icon = icon_path
-
-    # Enforce dark theme with a modern look
     page.theme_mode = ft.ThemeMode.DARK
     page.title = "Base64 Toolbox"
     page.bgcolor = ft.Colors.SURFACE
     page.window_width = 600
     page.window_height = 500
 
-    # Helper function for status notifications
     def show_toast(message: str, color: str = ft.Colors.GREEN):
         page.snack_bar = ft.SnackBar(
             content=ft.Text(message, color=ft.Colors.WHITE),
@@ -26,7 +22,6 @@ def main(page: ft.Page):
         page.snack_bar.open = True
         page.update()
 
-    # Text Input
     txt_input = ft.TextField(
         label="Input Text",
         multiline=True,
@@ -36,7 +31,6 @@ def main(page: ft.Page):
         expand=True,
     )
 
-    # Output display with a bordered box
     txt_output_container = ft.Container(
         content=ft.Text(
             value="Output will appear here...",
@@ -53,20 +47,21 @@ def main(page: ft.Page):
         alignment=ft.alignment.center,
     )
 
-    # Encoding method selection
     method_selection = ft.RadioGroup(
         content=ft.Row(
             [
                 ft.Radio(value="base64", label="Base64", fill_color=ft.Colors.CYAN_500),
                 ft.Radio(value="ascii", label="ASCII", fill_color=ft.Colors.CYAN_500),
+                ft.Radio(value="utf-8", label="UTF-8", fill_color=ft.Colors.CYAN_500),
                 ft.Radio(value="caesar", label="Caesar", fill_color=ft.Colors.CYAN_500),
             ],
             alignment=ft.MainAxisAlignment.CENTER,
         ),
         value="base64",
     )
-
-    # Caesar cipher shift input
+    
+    method_selection.value = "base64"
+    
     shift_input = ft.TextField(
         label="Caesar Shift (Default: 3)",
         value="3",
@@ -76,13 +71,14 @@ def main(page: ft.Page):
         text_style=ft.TextStyle(color=ft.Colors.ON_SURFACE),
     )
 
-    # Encryption & Decryption functions
     def process_text(input_text: str, method: str, is_encrypt: bool) -> str:
         try:
             if method == "ascii":
                 return " ".join(str(ord(char)) for char in input_text) if is_encrypt else "".join(chr(int(num)) for num in input_text.split())
             elif method == "base64":
                 return base64.b64encode(input_text.encode("utf-8")).decode("ascii") if is_encrypt else base64.b64decode(input_text).decode("utf-8")
+            elif method == "utf-8":
+                return " ".join(str(byte) for byte in input_text.encode("utf-8")) if is_encrypt else bytes(map(int, input_text.split())).decode("utf-8")
             elif method == "caesar":
                 shift = int(shift_input.value) if shift_input.value.isdigit() else 3
                 return "".join(
@@ -107,11 +103,9 @@ def main(page: ft.Page):
         pyperclip.copy(txt_output_container.content.value)
         show_toast("Output copied to clipboard!")
 
-    # Open update link function
     def open_update_link(e):
         webbrowser.open("https://github.com/TheDoctor200/Base64Tools/releases/latest")
 
-    # UI Layout
     page.add(
         ft.Container(
             content=ft.Column(
@@ -157,5 +151,4 @@ def main(page: ft.Page):
         )
     )
 
-# Start the app
 ft.app(target=main, view=ft.FLET_APP, assets_dir="assets")
