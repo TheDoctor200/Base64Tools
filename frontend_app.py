@@ -134,7 +134,7 @@ def main(page: ft.Page):
                     ft.Container(
                         content=ft.Row(
                             [
-                                ft.Icon(name="FLAG_ROUNDED", size=20, color=ft.Colors.WHITE),
+                                ft.Icon(name="FLAG_ROUNDED", size=18, color=ft.Colors.WHITE),
                                 ft.Text(
                                     value="Made by TheDoctor",
                                     color=ft.Colors.WHITE,
