@@ -33,4 +33,4 @@ pip install -r requirements.txt
 python frontend_app.py
 ```
 ## Support me, my hard work and future development:
-Crypto Wallet Adress: 0xfbe3E2337e7bCfC9245f0C2eAeF16597f0Bb2Dc2 (ETH, LTC, BNB)
+Crypto Wallet Adress: 0xfbe3E2337e7bCfC9245f0C2eAeF16597f0Bb2Dc2 (ETH)
