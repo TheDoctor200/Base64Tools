@@ -7,6 +7,7 @@ import webbrowser
 def main(page: ft.Page):
     icon_path = os.path.join(os.path.dirname(__file__), "assets", "B64_icon.ico")
     page.window_icon = icon_path
+    page.window_title = "Base64 Toolbox"  # Add title to the window border/titlebar
     page.theme_mode = ft.ThemeMode.DARK
     page.title = "Base64 Toolbox"
     page.bgcolor = ft.Colors.SURFACE
