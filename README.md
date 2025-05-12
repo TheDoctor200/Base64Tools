@@ -2,7 +2,7 @@
 
 ## ✨ Overview
 
-![Preview](./assets/preview.png)
+![Preview](./assets/SoftwarePreview.jpg)
 
 **Base64Tools** is a powerful and easy-to-use tool designed with a modern, fancy interface.<br>
 It allows you to encode and decode text in both **ASCII** and **UTF-8** formats.
